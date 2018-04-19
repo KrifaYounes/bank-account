@@ -44,7 +44,7 @@ public class AccountRestController {
 	}
 	
 	@PostMapping("/credit")
-	public Account addAmountToUserAccount(BigDecimal amount) throws IllegalBalanceException {
+	public Account addAmountToUserAccount(BigDecimal amount) {
 		service.addAmountToUserAccount(account, amount);
 		
 		return account;
