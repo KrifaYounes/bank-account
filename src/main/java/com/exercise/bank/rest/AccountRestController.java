@@ -2,6 +2,8 @@ package com.exercise.bank.rest;
 
 import java.math.BigDecimal;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,22 +34,27 @@ public class AccountRestController {
 	}
 	
 	@GetMapping("/informations")
-	public Account getAccountInformations() {
-		return account;
+	public ResponseEntity<Account> getAccountInformations() {
+		return new ResponseEntity<>(account, HttpStatus.OK) ;
 	}
 	
 	@PostMapping("/debit")
-	public Account withdrawnAmountFromAccount(BigDecimal amount) throws IllegalBalanceException {
-		service.withdrawAmountFromUserAccount(account, amount);
+	public ResponseEntity<Account> withdrawnAmountFromAccount(BigDecimal amount) {
+		try {
+			service.withdrawAmountFromUserAccount(account, amount);
+
+		} catch (IllegalBalanceException exception) {
+			return new ResponseEntity<>(account, HttpStatus.FORBIDDEN) ;
+		}
 		
-		return account;
+		return new ResponseEntity<>(account, HttpStatus.OK) ;
 	}
 	
 	@PostMapping("/credit")
-	public Account addAmountToUserAccount(BigDecimal amount) {
+	public ResponseEntity<Account> addAmountToUserAccount(BigDecimal amount) {
 		service.addAmountToUserAccount(account, amount);
 		
-		return account;
+		return new ResponseEntity<>(account, HttpStatus.OK) ;
 	}
 	
 }
